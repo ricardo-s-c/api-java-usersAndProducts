@@ -6,6 +6,7 @@ COPY . /app
 
 RUN apt-get install maven -y
 RUN cd app && mvn clean install
+RUN mvn clean install -DskipTests
 
 EXPOSE 8080
 

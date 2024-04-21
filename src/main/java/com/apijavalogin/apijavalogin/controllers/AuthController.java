@@ -2,6 +2,7 @@ package com.apijavalogin.apijavalogin.controllers;
 
 import java.util.Optional;
 
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,6 @@ public class AuthController {
             String token = this.tokenService.generateToken(newUser);
             return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token));
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body("User já existe!");
     }
 }

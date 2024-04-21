@@ -1,3 +1,4 @@
+create table tb_user (name varchar(155), email varchar(155), password varchar(255));
 create table tb_product (price float(53), created_at TIMESTAMP WITHOUT TIME ZONE, id bigserial not null, updated_at TIMESTAMP WITHOUT TIME ZONE, category varchar(255), img varchar(255), name varchar(255), primary key (id));
 INSERT INTO tb_user (name, email, password) VALUES ('John', 'John@mail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');
 INSERT INTO tb_user (name, email, password) VALUES ('Maria', 'admin@mail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');

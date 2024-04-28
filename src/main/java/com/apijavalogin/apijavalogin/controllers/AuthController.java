@@ -1,5 +1,7 @@
 package com.apijavalogin.apijavalogin.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.coyote.Response;
@@ -16,6 +18,7 @@ import com.apijavalogin.apijavalogin.dto.RegisterRequestDTO;
 import com.apijavalogin.apijavalogin.dto.ResponseDTO;
 import com.apijavalogin.apijavalogin.entities.User;
 import com.apijavalogin.apijavalogin.repositories.UserRepository;
+import com.apijavalogin.apijavalogin.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,32 +29,22 @@ public class AuthController {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final UserService service;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        User user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
-        if(passwordEncoder.matches(body.password(), user.getPassword())) {
-            String token = this.tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getName(), token));
-        }
-        return ResponseEntity.badRequest().build();
+        var userToken = service.login(body);
+
+        return ResponseEntity.ok(userToken);
     }
 
 
     @PostMapping("/users")
     public ResponseEntity register(@RequestBody RegisterRequestDTO body){
-        Optional<User> user = this.repository.findByEmail(body.email());
-
-        if(user.isEmpty()) {
-            User newUser = new User();
-            newUser.setPassword(passwordEncoder.encode(body.password()));
-            newUser.setEmail(body.email());
-            newUser.setName(body.name());
-            this.repository.save(newUser);
-
-            String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token));
+        var userToken = service.register(body);
+        if (userToken.user() == null || userToken.accessToken() == null) {
+            return ResponseEntity.badRequest().body("User já existe!");
         }
-        return ResponseEntity.badRequest().body("User já existe!");
+        return ResponseEntity.ok(userToken); 
     }
 }

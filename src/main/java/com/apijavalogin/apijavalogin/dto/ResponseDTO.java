@@ -1,3 +1,5 @@
 package com.apijavalogin.apijavalogin.dto;
 
-public record ResponseDTO (String name, String token) { }
+import com.apijavalogin.apijavalogin.entities.User;
+
+public record ResponseDTO (User user, String accessToken) { }
